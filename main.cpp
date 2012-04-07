@@ -7,16 +7,14 @@
 int main() {
   int i, j;
   float **matrixa, **matrixb, **matrixc;
-  size_t size1 = MS*sizeof(float*),
-         size2 = MS*sizeof(float);
 
-  matrixa = malloc(size1);
-  matrixb = malloc(size1);
-  matrixc = malloc(size1);
+  matrixa = (float**)malloc(MS*sizeof(float*));
+  matrixb = (float**)malloc(MS*sizeof(float*));
+  matrixc = (float**)malloc(MS*sizeof(float*));
   for (i = 0; i < MS; i++) {
-    matrixa[i] = malloc(size2);
-    matrixb[i] = malloc(size2);
-    matrixc[i] = malloc(size2);
+    matrixa[i] = (float*)malloc(MS*sizeof(float));
+    matrixb[i] = (float*)malloc(MS*sizeof(float));
+    matrixc[i] = (float*)malloc(MS*sizeof(float));
     for (j = 0; j < MS; j++) {
       matrixa[i][j] = i+j*1.0;
           matrixb[i][j] = 2.0;
