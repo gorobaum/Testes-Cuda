@@ -13,4 +13,4 @@ matrix_kernel.o: matrix_kernel.cu matrix_kernel.h
 
 #OTHER
 clean:
-	rm -f *~ *.o rk
+	rm -f *~ *.o *.swp matrix
