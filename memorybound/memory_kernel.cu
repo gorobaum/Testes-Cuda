@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "cuda.h"
 #include "cuda_runtime.h"
-#include "matrix_kernel.h"
+#include "memory_kernel.h"
 
 __global__ void multi_kernel(float *ma, float *mb, float *mc) {
   int row = threadIdx.x;
