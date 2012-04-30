@@ -4,7 +4,7 @@
 #include "cuda_runtime.h"
 #include "memory_kernel.h"
 
-__global__ void multi_kernel(float *ma, float *mb, float *mc) {
+__global__ void multi_kernel(double *ma, double *mb, double *mc) {
   int row = threadIdx.x;
   int column = threadIdx.y;
   int i = 0;
@@ -17,20 +17,20 @@ __global__ void multi_kernel(float *ma, float *mb, float *mc) {
   }
 }
 
-void matrixMulti_caller(float *Ma, float *Mb, float *Mc) {
-  float *cudamtxa, *cudamtxb, *cudamtxc;
+void matrixMulti_caller(double *Ma, double *Mb, double *Mc) {
+  double *cudamtxa, *cudamtxb, *cudamtxc;
   dim3 threadPerBlock(MS,MS);
 
-  cudaMalloc(&cudamtxa, MS*MS*sizeof(float));
-  cudaMalloc(&cudamtxb, MS*MS*sizeof(float));
-  cudaMalloc(&cudamtxc, MS*MS*sizeof(float));
+  cudaMalloc(&cudamtxa, MS*MS*sizeof(double));
+  cudaMalloc(&cudamtxb, MS*MS*sizeof(double));
+  cudaMalloc(&cudamtxc, MS*MS*sizeof(double));
 
-  cudaMemcpy(cudamtxa, Ma, MS*MS*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(cudamtxb, Mb, MS*MS*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(cudamtxa, Ma, MS*MS*sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(cudamtxb, Mb, MS*MS*sizeof(double), cudaMemcpyHostToDevice);
 
   multi_kernel<<<1, threadPerBlock>>>(cudamtxa, cudamtxb, cudamtxc);
 
 
-  cudaMemcpy(Mc, cudamtxc, MS*MS*sizeof(float), cudaMemcpyDeviceToHost);
+  cudaMemcpy(Mc, cudamtxc, MS*MS*sizeof(double), cudaMemcpyDeviceToHost);
   cudaDeviceSynchronize();
 }

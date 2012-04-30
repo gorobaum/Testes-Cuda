@@ -1,1 +1,1 @@
-void multiMatrix(float *Ma, float *Mb, float *Mc);
+void multiMatrix(double *Ma, double *Mb, double *Mc);

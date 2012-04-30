@@ -6,11 +6,11 @@
 
 int main() {
   int i;
-  float *matrixa, *matrixb, *matrixc;
+  double *matrixa, *matrixb, *matrixc;
   
-  matrixa = (float*)malloc(MS*MS*sizeof(float*));
-  matrixb = (float*)malloc(MS*MS*sizeof(float*));
-  matrixc = (float*)malloc(MS*MS*sizeof(float*));
+  matrixa = (double*)malloc(MS*MS*sizeof(double*));
+  matrixb = (double*)malloc(MS*MS*sizeof(double*));
+  matrixc = (double*)malloc(MS*MS*sizeof(double*));
   for (i = 0; i < MS*MS; i++) {
       matrixa[i] = (i)*1.0;
       matrixb[i] = 2.0;
