@@ -17,7 +17,7 @@ __global__ void multi_kernel(float *ma, float *mb, float *mc) {
   }
 }
 
-void matrixMulti_caller(float **Ma, float **Mb, float *Mc) {
+void matrixMulti_caller(float *Ma, float *Mb, float *Mc) {
   float *cudamtxa, *cudamtxb, *cudamtxc;
   dim3 threadPerBlock(MS,MS);
 
@@ -30,10 +30,7 @@ void matrixMulti_caller(float **Ma, float **Mb, float *Mc) {
 
   multi_kernel<<<1, threadPerBlock>>>(cudamtxa, cudamtxb, cudamtxc);
 
-  printf("Matrixc[0][0] = %f\n", Ma[1][1]);
 
   cudaMemcpy(Mc, cudamtxc, MS*MS*sizeof(float), cudaMemcpyDeviceToHost);
   cudaDeviceSynchronize();
-
-  printf("Matrixc[0][0] = %f\n", Mc[11]);
 }

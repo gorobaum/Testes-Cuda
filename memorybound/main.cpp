@@ -1,30 +1,26 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include "memory.h"
 
-#define MS 10
+#define MS 500
 
 int main() {
-  int i, j;
-  float **matrixa, **matrixb, *matrixc;
+  int i;
+  float *matrixa, *matrixb, *matrixc;
   
-  matrixa = (float**)malloc(MS*sizeof(float*));
-  matrixb = (float**)malloc(MS*sizeof(float*));
+  matrixa = (float*)malloc(MS*MS*sizeof(float*));
+  matrixb = (float*)malloc(MS*MS*sizeof(float*));
   matrixc = (float*)malloc(MS*MS*sizeof(float*));
-  for (i = 0; i < MS; i++) {
-    matrixa[i] = (float*)malloc(MS*sizeof(float));
-    matrixb[i] = (float*)malloc(MS*sizeof(float));
-    
-    for (j = 0; j < MS; j++) {
-      matrixa[i][j] = (i+j)*1.0;
-      matrixb[i][j] = 2.0;
-    }
+  for (i = 0; i < MS*MS; i++) {
+      matrixa[i] = (i)*1.0;
+      matrixb[i] = 2.0;
   }
   
   multiMatrix(matrixa, matrixb, matrixc);  
 
-  for( i = 0; i < MS*MS; i++ ) {
+  /*for (i = 0; i < MS*MS; i++) {
     printf("%f\t", matrixc[i]);
   }
+  printf("\n");*/
   return 0;
 }
