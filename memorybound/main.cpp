@@ -18,10 +18,9 @@ int main() {
   //printf("MA[%d] = %f\nMB[%d] = %f\n",0, matrixa[199], 0, matrixb[199]);
   copyMatrix(matrixa, matrixb);  
 
-  for (i = 0; i < MS*MS; i++) {
+  /*for (i = 0; i < MS; i++) {
     printf("Matrixb[%d] = %f\n", i, matrixb[i]);
-    getchar();
   }
-  printf("\n");
+  printf("\n");*/
   return 0;
 }
