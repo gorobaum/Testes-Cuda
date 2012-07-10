@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include "memory.h"
 
-#define MS 500
+#define MS 100
 
 int main() {
   int i;
@@ -18,9 +18,9 @@ int main() {
   
   multiMatrix(matrixa, matrixb, matrixc);  
 
-  /*for (i = 0; i < MS*MS; i++) {
-    printf("%f\t", matrixc[i]);
+  for (i = 0; i < MS*MS; i++) {
+    printf("%f\n", matrixc[i]);
   }
-  printf("\n");*/
+  printf("\n");
   return 0;
 }
