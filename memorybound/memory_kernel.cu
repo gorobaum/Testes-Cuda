@@ -21,6 +21,8 @@ void matrixMulti_caller(double *Ma, double *Mb, double *Mc) {
   double *cudamtxa, *cudamtxb, *cudamtxc;
   dim3 threadPerBlock(MS,MS);
   size_t free, total;
+  
+  cudaDeviceReset();
 
   cudaMemGetInfo(&free, &total);
   printf("GPU Memory Info -\n");
