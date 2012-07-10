@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include "memory.h"
 
-#define MS 100
+#define MS 200
 
 int main() {
   int i;

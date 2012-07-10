@@ -20,6 +20,13 @@ __global__ void multi_kernel(double *ma, double *mb, double *mc) {
 void matrixMulti_caller(double *Ma, double *Mb, double *Mc) {
   double *cudamtxa, *cudamtxb, *cudamtxc;
   dim3 threadPerBlock(MS,MS);
+  size_t free, total;
+
+  cudaMemGetInfo(&free, &total);
+  printf("GPU Memory Info -\n");
+  printf("GPU Free Memory = %d MB\n", free/(1024*1024));
+  printf("GPU Total Memory = %d MB\n", total/(1024*1024));
+  getchar();
 
   cudaMalloc(&cudamtxa, MS*MS*sizeof(double));
   cudaMalloc(&cudamtxb, MS*MS*sizeof(double));
