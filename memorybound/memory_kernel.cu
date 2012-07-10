@@ -22,8 +22,6 @@ void matrixMulti_caller(double *Ma, double *Mb, double *Mc) {
   dim3 threadPerBlock(MS,MS);
   size_t free, total;
   
-  cudaDeviceReset();
-
   cudaMemGetInfo(&free, &total);
   printf("GPU Memory Info -\n");
   printf("GPU Free Memory = %d MB\n", free/(1024*1024));
@@ -36,10 +34,20 @@ void matrixMulti_caller(double *Ma, double *Mb, double *Mc) {
 
   cudaMemcpy(cudamtxa, Ma, MS*MS*sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(cudamtxb, Mb, MS*MS*sizeof(double), cudaMemcpyHostToDevice);
+  
+  printf("GPU Memory Info -\n");
+  printf("GPU Free Memory = %d MB\n", free/(1024*1024));
+  printf("GPU Total Memory = %d MB\n", total/(1024*1024));
+  getchar();
+
 
   multi_kernel<<<1, threadPerBlock>>>(cudamtxa, cudamtxb, cudamtxc);
 
 
   cudaMemcpy(Mc, cudamtxc, MS*MS*sizeof(double), cudaMemcpyDeviceToHost);
+  cudaDeviceSynchronize();
+  cudaFree(cudamtxa);
+  cudaFree(cudamtxb);
+  cudaFree(cudamtxc);
   cudaDeviceSynchronize();
 }
