@@ -11,8 +11,8 @@ __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int colum
 }
 
 int main () {
-  int row = 10,
-      column = 10,
+  int row = 20,
+      column = 20,
       i = 0,
       j = 0;
   int blocksPerGrid = 1;
@@ -30,24 +30,33 @@ int main () {
     }
   
   /* Cuda memory allocation. */
-  cudaMalloc(&cudaMA, size);
-  cudaMalloc(&cudaMB, size);
+  if (cudaMalloc(&cudaMA, size) != cudaSuccess)
+      printf("Erro na alçocação de recursos!\n");
+  if (cudaMalloc(&cudaMB, size) != cudaSuccess)
+      printf("Erro na alçocação de recursos!\n");
 
   /* Cuda memory copy. */
-  cudaMemcpy(cudaMA, MatrixA, size, cudaMemcpyHostToDevice);
-  cudaMemcpy(cudaMB, MatrixB, size, cudaMemcpyHostToDevice);
+  if (cudaMemcpy(cudaMA, MatrixA, size, cudaMemcpyHostToDevice) != cudaSuccess)
+      printf("Erro na cópia de recursos!\n");
+  if (cudaMemcpy(cudaMB, MatrixB, size, cudaMemcpyHostToDevice) != cudaSuccess)
+      printf("Erro na cópia de recursos!\n");
 
   /* Cuda kernel call. */
   MatrixCopy<<<blocksPerGrid, threadPerBlock>>>(cudaMA, cudaMB, row, column);
+  cudaDeviceSynchronize();
 
-  cudaMemcpy(MatrixB, cudaMB, size, cudaMemcpyDeviceToHost);
+  if (cudaMemcpy(MatrixB, cudaMB, size, cudaMemcpyDeviceToHost) != cudaSuccess)
+      printf("Erro na cópia do Device para o Host!\n");
 
   for (i = 0; i < column; i++) {
     for (j = 0; j < row; j++) {
-      printf("%lf\t", MatrixB[i+j*row]);
+      printf("%.1lf ", MatrixB[i+j*row]);
     }
     printf("\n");
   }
+  
+  cudaFree(&cudaMA);
+  cudaFree(&cudaMB);
 
   return 0;
 }
