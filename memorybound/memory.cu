@@ -39,5 +39,15 @@ int main () {
 
   /* Cuda kernel call. */
   MatrixCopy<<<blocksPerGrid, threadPerBlock>>>(cudaMA, cudaMB, row, column);
+
+  cudaMemcpy(MatrixB, cudaMB, size, cudaMemcpyDeviceToHost);
+
+  for (i = 0; i < column; i++) {
+    for (j = 0; j < row; j++) {
+      printf("%lf\t", MatrixB[i+j*row]);
+    }
+    printf("\n");
+  }
+
   return 0;
 }
