@@ -11,8 +11,8 @@ __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int colum
 }
 
 int main () {
-  int row = 20,
-      column = 20,
+  int row = 32,
+      column = 32,
       i = 0,
       j = 0;
   int blocksPerGrid = 1;
