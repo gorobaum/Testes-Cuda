@@ -5,14 +5,13 @@
 
 __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int column) {
   int i = blockIdx.x*blockDim.x+threadIdx.x;
-  int j = blockIdx.x*blockDim.x+threadIdx.y;
-
+  int j = blockIdx.y*blockDim.y+threadIdx.y;
   MatrixB[i+j*column] = MatrixA[i+j*column];
 }
 
 int main () {
   int row = 32,
-      column = 32,
+      column = 16,
       i = 0,
       j = 0;
   dim3 threadPerBlock(16, 16),
@@ -24,10 +23,10 @@ int main () {
   MatrixA = (double*)malloc(size);
   MatrixB = (double*)malloc(size);
   
-  for (i = 0; i < column; i++)
-    for (j = 0; j < row; j++) {
-      MatrixA[i+j*row] = i+j*row;
-      MatrixB[i+j*row] = 0.0;
+  for (i = 0; i < row; i++)
+    for (j = 0; j < column; j++) {
+      MatrixA[i*column+j] = i*column+j;
+      MatrixB[i*column+j] = 0.0;
     }
  
   /* Cuda memory allocation. */
@@ -49,9 +48,9 @@ int main () {
   if (cudaMemcpy(MatrixB, cudaMB, size, cudaMemcpyDeviceToHost) != cudaSuccess)
       printf("Erro na cópia do Device para o Host!\n");
 
-  for (i = 0; i < column; i++) {
-    for (j = 0; j < row; j++) {
-      printf("%5.lf ", MatrixB[i+j*row]);
+  for (i = 0; i < row; i++) {
+    for (j = 0; j < column; j++) {
+      printf("%5.lf ", MatrixB[i*column+j]);
     }
     printf("\n");
   }
