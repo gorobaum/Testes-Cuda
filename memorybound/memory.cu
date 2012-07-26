@@ -6,7 +6,7 @@
 __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int column) {
   int i = blockIdx.x*blockDim.x+threadIdx.x;
   int j = blockIdx.y*blockDim.y+threadIdx.y;
-  MatrixB[i+j*column] = MatrixA[i+j*column];
+  MatrixB[i*column+j] = MatrixA[i*column+j];
 }
 
 int main () {
