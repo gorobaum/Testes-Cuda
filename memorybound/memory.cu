@@ -4,10 +4,10 @@
 #include <stdio.h>
 
 __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int column) {
-  int i = threadIdx.x;
-  int j = threadIdx.y;
+  int i = blockIdx.x*blockDim.x+threadIdx.x;
+  int j = blockIdx.x*blockDim.x+threadIdx.y;
 
-  MatrixB[i+j*row] = MatrixA[i+j*row];
+  MatrixB[i+j*column] = MatrixA[i+j*column];
 }
 
 int main () {
@@ -15,11 +15,12 @@ int main () {
       column = 32,
       i = 0,
       j = 0;
-  int blocksPerGrid = 1;
-  dim3 threadPerBlock(row, column);
+  dim3 threadPerBlock(16, 16),
+       blocksPerGrid(row/threadPerBlock.x, column/threadPerBlock.y);
   size_t size = row*column*sizeof(double);
   double *MatrixA, *MatrixB, *cudaMA, *cudaMB;
-
+  
+  /* Matrix allocation. */
   MatrixA = (double*)malloc(size);
   MatrixB = (double*)malloc(size);
   
@@ -28,7 +29,7 @@ int main () {
       MatrixA[i+j*row] = i+j*row;
       MatrixB[i+j*row] = 0.0;
     }
-  
+ 
   /* Cuda memory allocation. */
   if (cudaMalloc(&cudaMA, size) != cudaSuccess)
       printf("Erro na alçocação de recursos!\n");
@@ -50,7 +51,7 @@ int main () {
 
   for (i = 0; i < column; i++) {
     for (j = 0; j < row; j++) {
-      printf("%.1lf ", MatrixB[i+j*row]);
+      printf("%5.lf ", MatrixB[i+j*row]);
     }
     printf("\n");
   }
