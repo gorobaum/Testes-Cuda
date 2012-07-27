@@ -2,6 +2,7 @@
 #include <cuda.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int column) {
   int i = blockIdx.x*blockDim.x+threadIdx.x;
@@ -10,12 +11,12 @@ __global__ void MatrixCopy (double* MatrixA, double* MatrixB, int row, int colum
 }
 
 int main () {
-  int row = 32,
-      column = 32,
+  int row = 100,
+      column = 100,
       i = 0,
       j = 0;
   dim3 threadPerBlock(16, 16),
-       blocksPerGrid(row/threadPerBlock.x, column/threadPerBlock.y);
+       blocksPerGrid(row/threadPerBlock.x+1, column/threadPerBlock.y+1);
   size_t size = row*column*sizeof(double);
   double *MatrixA, *MatrixB, *cudaMA, *cudaMB;
   
@@ -26,7 +27,7 @@ int main () {
   for (i = 0; i < row; i++)
     for (j = 0; j < column; j++) {
       MatrixA[i*column+j] = i*column+j;
-      MatrixB[i*column+j] = 0.0;
+      MatrixB[i*column+j] = 2.0;
     }
  
   /* Cuda memory allocation. */
@@ -50,7 +51,7 @@ int main () {
 
   for (i = 0; i < row; i++) {
     for (j = 0; j < column; j++) {
-      printf("%5.lf ", MatrixB[i*column+j]);
+      printf("%5.lf\n", MatrixB[i*column+j]);
     }
     printf("\n");
   }

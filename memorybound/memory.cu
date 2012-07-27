@@ -15,7 +15,7 @@ int main () {
       i = 0,
       j = 0;
   dim3 threadPerBlock(16, 16),
-       blocksPerGrid(row/threadPerBlock.x, column/threadPerBlock.y);
+       blocksPerGrid(row/threadPerBlock.x+1, column/threadPerBlock.y+1);
   size_t size = row*column*sizeof(double);
   double *MatrixA, *MatrixB, *cudaMA, *cudaMB;
   
