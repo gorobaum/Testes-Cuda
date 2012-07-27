@@ -21,6 +21,8 @@ int main () {
        blocksPerGrid(N/threadPerBlock.x, N/threadPerBlock.y);
   size_t size = N*N*sizeof(double);
   double *MatrixA, *MatrixB, *MatrixC, *cudaMA, *cudaMB, *cudaMC;
+  float time;
+  cudaEvent_t start, stop;
   
   /* Matrix allocation. */
   MatrixA = (double*)malloc(size);
@@ -50,19 +52,33 @@ int main () {
   if (cudaMemcpy(cudaMC, MatrixC, size, cudaMemcpyHostToDevice) != cudaSuccess)
       printf("Erro na cópia de recursos!\n");
 
+  /* Cuda time counter init. */
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+
   /* Cuda kernel call. */
+  cudaEventRecord(start, 0);
   MatrixCopy<<<blocksPerGrid, threadPerBlock>>>(cudaMA, cudaMB, cudaMC, N);
   cudaDeviceSynchronize();
+  cudaEventRecord(stop, 0);
+  cudaEventSynchronize( stop );
+
+  /* Calculating run time. */
+  cudaEventElapsedTime( &time, start, stop );
+  cudaEventDestroy( start );
+  cudaEventDestroy( stop );
+  printf("Total run time on GPU = %fms\n", time);
 
   if (cudaMemcpy(MatrixC, cudaMC, size, cudaMemcpyDeviceToHost) != cudaSuccess)
       printf("Erro na cópia do Device para o Host!\n");
 
+  /*
   for (i = 0; i < N; i++) {
     for (j = 0; j < N; j++) {
       printf("%5.lf\n", MatrixC[i*N+j]);
     }
     printf("\n");
-  }
+  }*/
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);
