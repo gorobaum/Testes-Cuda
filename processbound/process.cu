@@ -4,45 +4,45 @@
 #include <stdio.h>
 #include <math.h>
 
-__global__ void MatrixCopy (double* MatrixA, double* MatrixB, double* MatrixC, int N) {
+__global__ void MatrixCopy (float* MatrixA, float* MatrixB, float* MatrixC, int N) {
   int j = blockIdx.x*blockDim.x+threadIdx.x;
   int i = blockIdx.y*blockDim.y+threadIdx.y;
   int k;
-
+  MatrixC[i*N+j] = 0;
   for (k = 0; k < N; k++ )
-    MatrixC[i*N+j] += MatrixA[i*N+k]*MatrixB[k+j*N];
+    MatrixC[i*N+j] += MatrixA[i*N+k]*MatrixB[k*N+j];
 }
 
 int main () {
-  int N = 32,
+  int N = 500,
       i = 0,
       j = 0;
-  dim3 threadPerBlock(16, 16),
-       blocksPerGrid(N/threadPerBlock.x, N/threadPerBlock.y);
-  size_t size = N*N*sizeof(double);
-  double *MatrixA, *MatrixB, *MatrixC, *cudaMA, *cudaMB, *cudaMC;
+  dim3 threadPerBlock(32, 32),
+       blocksPerGrid(N/threadPerBlock.x+1, N/threadPerBlock.y+1);
+  size_t size = N*N*sizeof(float);
+  float *MatrixA, *MatrixB, *MatrixC, *cudaMA, *cudaMB, *cudaMC;
   float time;
   cudaEvent_t start, stop;
   
   /* Matrix allocation. */
-  MatrixA = (double*)malloc(size);
-  MatrixB = (double*)malloc(size);
-  MatrixC = (double*)malloc(size);
+  MatrixA = (float*)malloc(size);
+  MatrixB = (float*)malloc(size);
+  MatrixC = (float*)malloc(size);
  
   for (i = 0; i < N; i++)
     for (j = 0; j < N; j++) {
-      MatrixA[i*N+j] = i*N+j;
+      MatrixA[i*N+j] = i+j;
       MatrixB[i*N+j] = 2.0;
       MatrixC[i*N+j] = 0.0;
     }
  
   /* Cuda memory allocation. */
   if (cudaMalloc(&cudaMA, size) != cudaSuccess)
-      printf("Erro na alçocação de recursos!\n");
+      printf("Erro na alocação de recursos!\n");
   if (cudaMalloc(&cudaMB, size) != cudaSuccess)
-      printf("Erro na alçocação de recursos!\n");
+      printf("Erro na alocação de recursos!\n");
   if (cudaMalloc(&cudaMC, size) != cudaSuccess)
-      printf("Erro na alçocação de recursos!\n");
+      printf("Erro na alocação de recursos!\n");
 
   /* Cuda memory copy. */
   if (cudaMemcpy(cudaMA, MatrixA, size, cudaMemcpyHostToDevice) != cudaSuccess)
@@ -72,13 +72,12 @@ int main () {
   if (cudaMemcpy(MatrixC, cudaMC, size, cudaMemcpyDeviceToHost) != cudaSuccess)
       printf("Erro na cópia do Device para o Host!\n");
 
-  /*
+  
   for (i = 0; i < N; i++) {
     for (j = 0; j < N; j++) {
-      printf("%5.lf\n", MatrixC[i*N+j]);
+      printf("C[%d][%d] = %f\n", i, j, MatrixC[i*N+j]);
     }
-    printf("\n");
-  }*/
+  }
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);
