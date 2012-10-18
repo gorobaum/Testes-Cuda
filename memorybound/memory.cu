@@ -58,18 +58,18 @@ int main () {
   cudaEventElapsedTime( &time, start, stop );
   cudaEventDestroy( start );
   cudaEventDestroy( stop );
-  printf("Total run time on GPU = %fms\n", time);
+  printf("%f\n", time);
 
 
   if (cudaMemcpy(MatrixB, cudaMB, size, cudaMemcpyDeviceToHost) != cudaSuccess)
       printf("Erro na cópia do Device para o Host!\n");
 
   
-  for (i = 0; i < row; i++) {
-    for (j = 0; j < column; j++) {
-      printf("%.lf\n", MatrixB[i*column+j]);
-    }
-  }
+  // for (i = 0; i < row; i++) {
+  //   for (j = 0; j < column; j++) {
+  //     printf("%.lf\n", MatrixB[i*column+j]);
+  //   }
+  // }
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);

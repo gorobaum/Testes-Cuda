@@ -14,7 +14,7 @@ __global__ void MatrixCopy (float* MatrixA, float* MatrixB, float* MatrixC, int 
 }
 
 int main () {
-  int N = 500,
+  int N = 511,
       i = 0,
       j = 0;
   dim3 threadPerBlock(32, 32),
@@ -67,17 +67,17 @@ int main () {
   cudaEventElapsedTime( &time, start, stop );
   cudaEventDestroy( start );
   cudaEventDestroy( stop );
-  printf("Total run time on GPU = %fms\n", time);
+  printf("%f\n", time);
 
   if (cudaMemcpy(MatrixC, cudaMC, size, cudaMemcpyDeviceToHost) != cudaSuccess)
       printf("Erro na cópia do Device para o Host!\n");
 
   
-  for (i = 0; i < N; i++) {
-    for (j = 0; j < N; j++) {
-      printf("C[%d][%d] = %f\n", i, j, MatrixC[i*N+j]);
-    }
-  }
+  // for (i = 0; i < N; i++) {
+  //   for (j = 0; j < N; j++) {
+  //     printf("C[%d][%d] = %f\n", i, j, MatrixC[i*N+j]);
+  //   }
+  // }
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);
