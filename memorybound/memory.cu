@@ -10,12 +10,12 @@ __global__ void MatrixCopy (float* MatrixA, float* MatrixB, int row, int column)
 }
 
 int main () {
-  int row = 500,
-      column = 500,
+  int row = 8192,
+      column = 8192,
       i = 0,
       j = 0;
   dim3 threadPerBlock(16, 16),
-       blocksPerGrid(row/threadPerBlock.x+1, column/threadPerBlock.y+1);
+       blocksPerGrid(row/threadPerBlock.x, column/threadPerBlock.y);
   size_t size = row*column*sizeof(float);
   float *MatrixA, *MatrixB, *cudaMA, *cudaMB;
   float time;
@@ -28,14 +28,13 @@ int main () {
   for (i = 0; i < row; i++)
     for (j = 0; j < column; j++) {
       MatrixA[i*column+j] = i+j;
-      MatrixB[i*column+j] = 0.0;
     }
  
   /* Cuda memory allocation. */
   if (cudaMalloc(&cudaMA, size) != cudaSuccess)
-      printf("Erro na alçocação de recursos!\n");
+      printf("Erro na alocação de recursos!\n");
   if (cudaMalloc(&cudaMB, size) != cudaSuccess)
-      printf("Erro na alçocação de recursos!\n");
+      printf("Erro na alocação de recursos!\n");
 
   /* Cuda memory copy. */
   if (cudaMemcpy(cudaMA, MatrixA, size, cudaMemcpyHostToDevice) != cudaSuccess)
@@ -65,14 +64,16 @@ int main () {
       printf("Erro na cópia do Device para o Host!\n");
 
   
-  // for (i = 0; i < row; i++) {
-  //   for (j = 0; j < column; j++) {
-  //     printf("%.lf\n", MatrixB[i*column+j]);
-  //   }
-  // }
+  /*for (i = 0; i < row; i++) {
+    for (j = 0; j < column; j++) {
+      printf("%.lf\n", MatrixB[i*column+j]);
+    }
+  }*/
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);
+  free(MatrixA);
+  free(MatrixB);
 
   return 0;
 }

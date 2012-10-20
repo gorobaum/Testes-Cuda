@@ -14,11 +14,11 @@ __global__ void MatrixCopy (float* MatrixA, float* MatrixB, float* MatrixC, int 
 }
 
 int main () {
-  int N = 511,
+  int N = 2048,
       i = 0,
       j = 0;
   dim3 threadPerBlock(32, 32),
-       blocksPerGrid(N/threadPerBlock.x+1, N/threadPerBlock.y+1);
+       blocksPerGrid(N/threadPerBlock.x, N/threadPerBlock.y);
   size_t size = N*N*sizeof(float);
   float *MatrixA, *MatrixB, *MatrixC, *cudaMA, *cudaMB, *cudaMC;
   float time;
@@ -73,11 +73,11 @@ int main () {
       printf("Erro na cópia do Device para o Host!\n");
 
   
-  // for (i = 0; i < N; i++) {
-  //   for (j = 0; j < N; j++) {
-  //     printf("C[%d][%d] = %f\n", i, j, MatrixC[i*N+j]);
-  //   }
-  // }
+  /*for (i = 0; i < N; i++) {
+    for (j = 0; j < N; j++) {
+      printf("C[%d][%d] = %f\n", i, j, MatrixC[i*N+j]);
+    }
+  }*/
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);
