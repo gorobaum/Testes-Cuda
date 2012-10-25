@@ -10,8 +10,8 @@ __global__ void MatrixCopy (float* MatrixA, float* MatrixB, int row, int column)
 }
 
 int main () {
-  int row = 8192,
-      column = 8192,
+  int row = 4096,
+      column = 4096,
       i = 0,
       j = 0;
   dim3 threadPerBlock(16, 16),
@@ -30,6 +30,10 @@ int main () {
       MatrixA[i*column+j] = i+j;
     }
  
+  /* Cuda time counter init. */
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+
   /* Cuda memory allocation. */
   if (cudaMalloc(&cudaMA, size) != cudaSuccess)
       printf("Erro na alocação de recursos!\n");
@@ -41,10 +45,6 @@ int main () {
       printf("Erro na cópia de recursos!\n");
   if (cudaMemcpy(cudaMB, MatrixB, size, cudaMemcpyHostToDevice) != cudaSuccess)
       printf("Erro na cópia de recursos!\n");
-  
-  /* Cuda time counter init. */
-  cudaEventCreate(&start);
-  cudaEventCreate(&stop);
 
   /* Cuda kernel call. */
   cudaEventRecord(start, 0);

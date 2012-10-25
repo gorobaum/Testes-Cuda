@@ -14,14 +14,14 @@ __global__ void MatrixCopy (float* MatrixA, float* MatrixB, float* MatrixC, int 
 }
 
 int main () {
-  int N = 2048,
+  int N = 1024,
       i = 0,
       j = 0;
   dim3 threadPerBlock(32, 32),
        blocksPerGrid(N/threadPerBlock.x, N/threadPerBlock.y);
   size_t size = N*N*sizeof(float);
   float *MatrixA, *MatrixB, *MatrixC, *cudaMA, *cudaMB, *cudaMC;
-  float time;
+  float totaltime;
   cudaEvent_t start, stop;
   
   /* Matrix allocation. */
@@ -36,6 +36,10 @@ int main () {
       MatrixC[i*N+j] = 0.0;
     }
  
+  /* Cuda totaltime counter init. */
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+
   /* Cuda memory allocation. */
   if (cudaMalloc(&cudaMA, size) != cudaSuccess)
       printf("Erro na alocação de recursos!\n");
@@ -52,10 +56,6 @@ int main () {
   if (cudaMemcpy(cudaMC, MatrixC, size, cudaMemcpyHostToDevice) != cudaSuccess)
       printf("Erro na cópia de recursos!\n");
 
-  /* Cuda time counter init. */
-  cudaEventCreate(&start);
-  cudaEventCreate(&stop);
-
   /* Cuda kernel call. */
   cudaEventRecord(start, 0);
   MatrixCopy<<<blocksPerGrid, threadPerBlock>>>(cudaMA, cudaMB, cudaMC, N);
@@ -63,17 +63,17 @@ int main () {
   cudaEventRecord(stop, 0);
   cudaEventSynchronize( stop );
 
-  /* Calculating run time. */
-  cudaEventElapsedTime( &time, start, stop );
+  /* Calculating run totaltime. */
+  cudaEventElapsedTime( &totaltime, start, stop );
   cudaEventDestroy( start );
   cudaEventDestroy( stop );
-  printf("%f\n", time);
+  printf("%f\n", totaltime);
 
   if (cudaMemcpy(MatrixC, cudaMC, size, cudaMemcpyDeviceToHost) != cudaSuccess)
       printf("Erro na cópia do Device para o Host!\n");
 
   
-  /*for (i = 0; i < N; i++) {
+/*  for (i = 0; i < N; i++) {
     for (j = 0; j < N; j++) {
       printf("C[%d][%d] = %f\n", i, j, MatrixC[i*N+j]);
     }
@@ -81,6 +81,9 @@ int main () {
   
   cudaFree(&cudaMA);
   cudaFree(&cudaMB);
+  free(MatrixA);
+  free(MatrixB);
+  free(MatrixC);
 
   return 0;
 }
