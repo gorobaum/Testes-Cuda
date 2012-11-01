@@ -2,7 +2,7 @@ process.o: process.cu
 	nvcc process.cu -o process -arch=compute_20
 
 ptx: process.cu
-	nvcc --ptx -arch sm_20 process.cu
+	nvcc --ptx -arch=compute_20 process.cu
 
 #OTHER
 clean:
