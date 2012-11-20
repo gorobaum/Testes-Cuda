@@ -5,12 +5,12 @@
 #include <math.h>
 
 __global__ void MatrixCopy (float* MatrixA, float* MatrixB, float* MatrixC, int N) {
-  int j = blockIdx.x*blockDim.x+threadIdx.x;
-  int i = blockIdx.y*blockDim.y+threadIdx.y;
+  int row = blockIdx.x*blockDim.x+threadIdx.x;
+  int column = blockIdx.y*blockDim.y+threadIdx.y;
   int k;
-  MatrixC[i*N+j] = 0;
+  MatrixC[column*N+row] = 0;
   for (k = 0; k < N; k++ )
-    MatrixC[i*N+j] += MatrixA[i*N+k]*MatrixB[k*N+j];
+    MatrixC[column*N+row] += MatrixA[column*N+k]*MatrixB[k*N+row];
 }
 
 int main () {

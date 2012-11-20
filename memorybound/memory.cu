@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-__global__ void MatrixCopy (float* MatrixA, float* MatrixB, int row, int column) {
-  int i = blockIdx.x*blockDim.x+threadIdx.x;
-  int j = blockIdx.y*blockDim.y+threadIdx.y;
-  MatrixB[i*column+j] = MatrixA[i*column+j];
+__global__ void MatrixCopy (float* MatrixA, float* MatrixB, int rowSize, int columnSize) {
+  int row = blockIdx.x*blockDim.x+threadIdx.x;
+  int column = blockIdx.y*blockDim.y+threadIdx.y;
+  MatrixB[row+column*columnSize] = MatrixA[row+column*columnSize];
 }
 
 int main () {

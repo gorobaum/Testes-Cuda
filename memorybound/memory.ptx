@@ -8,7 +8,7 @@
 .target sm_20
 .address_size 64
 
-	.file	1 "/tmp/tmpxft_00001b52_00000000-9_memory.cpp3.i"
+	.file	1 "/tmp/tmpxft_00003b7f_00000000-9_memory.cpp3.i"
 	.file	2 "memory.cu"
 
 .entry _Z10MatrixCopyPfS_ii(
@@ -38,7 +38,7 @@
 	mov.u32 	%r8, %tid.y;
 	mad.lo.s32 	%r9, %r6, %r7, %r8;
 	.loc 2 9 1
-	mad.lo.s32 	%r10, %r5, %r1, %r9;
+	mad.lo.s32 	%r10, %r9, %r1, %r5;
 	cvta.to.global.u64 	%rl4, %rl1;
 	.loc 2 9 1
 	mul.wide.s32 	%rl5, %r10, 4;
